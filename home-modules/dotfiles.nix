@@ -28,7 +28,18 @@ in {
     };
   };
 
+  options.programs.illogical-impulse.hyprland = {
+    plugins = mkOption {
+      type = types.listOf types.package;
+      default = [];
+      description = "List of Hyprland plugins to install and load";
+    };
+  };
+
   config = mkIf cfg.enable {
+    # Install the plugins to the user environment so they are available
+    home.packages = cfg.hyprland.plugins;
+
     # Shell programs
     programs.fish = {
       enable = cfg.dotfiles.fish.enable;
@@ -71,7 +82,20 @@ in {
       # Hyprland Config
       # Use text/readFile to put the file in the HM generation directory
       # This ensures relative sources (like hyprland/env.conf) resolve to OUR patched files
-      "hypr/hyprland.conf".text = builtins.readFile "${dotfilesSource}/dots/.config/hypr/hyprland.conf";
+      "hypr/hyprland.conf".text =
+        (builtins.readFile "${dotfilesSource}/dots/.config/hypr/hyprland.conf")
+        + ''
+
+          # Load declarative plugins from the flake
+          source = plugins.conf
+        '';
+
+      # Generate plugins.conf with paths to installed plugins
+      "hypr/plugins.conf".text =
+        lib.concatMapStrings (plugin: ''
+          plugin = ${plugin}/lib/lib${plugin.pname}.so
+        '')
+        cfg.hyprland.plugins;
 
       # Hyprland Environment - Patched to fix XDG_DATA_DIRS and define qsConfig EARLY
       "hypr/hyprland/env.conf".text = ''

@@ -8,7 +8,7 @@ inputs: {
   pythonEnv = cfg.internal.pythonEnv;
 
   # The raw QuickShell package
-  qsPackage = inputs.quickshell.packages.${pkgs.system}.default;
+  qsPackage = inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
   # Runtime dependencies
   qtImports = [
