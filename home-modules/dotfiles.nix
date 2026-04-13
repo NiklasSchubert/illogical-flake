@@ -140,13 +140,13 @@ in {
       '';
 
       # Symlink other hyprland files individually
-      "hypr/hyprland/colors.conf".source = "${dotfilesSource}/dots/.config/hypr/hyprland/colors.conf";
       "hypr/hyprland/execs.conf".source = "${dotfilesSource}/dots/.config/hypr/hyprland/execs.conf";
       # Patch general.conf to remove obsolete hyprexpo options (enable_gesture, gesture_positive)
       # These were removed from the hyprexpo plugin API and cause "Invalid value false for finger count" error
-      "hypr/hyprland/general.conf".text = builtins.replaceStrings
-        [ "enable_gesture = false" "gesture_positive = false" ]
-        [ "# enable_gesture = false  # Removed: obsolete hyprexpo option" "# gesture_positive = false  # Removed: obsolete hyprexpo option" ]
+      "hypr/hyprland/general.conf".text =
+        builtins.replaceStrings
+        ["enable_gesture = false" "gesture_positive = false"]
+        ["# enable_gesture = false  # Removed: obsolete hyprexpo option" "# gesture_positive = false  # Removed: obsolete hyprexpo option"]
         (builtins.readFile "${dotfilesSource}/dots/.config/hypr/hyprland/general.conf");
       "hypr/hyprland/keybinds.conf".source = "${dotfilesSource}/dots/.config/hypr/hyprland/keybinds.conf";
       "hypr/hyprland/rules.conf".source = "${dotfilesSource}/dots/.config/hypr/hyprland/rules.conf";
@@ -160,10 +160,12 @@ in {
       "hypr/custom/general.conf".source = "${dotfilesSource}/dots/.config/hypr/custom/general.conf";
       "hypr/custom/keybinds.conf".source = "${dotfilesSource}/dots/.config/hypr/custom/keybinds.conf";
       "hypr/custom/rules.conf".source = "${dotfilesSource}/dots/.config/hypr/custom/rules.conf";
-      "hypr/custom/scripts".source = "${dotfilesSource}/dots/.config/hypr/custom/scripts";
-      "hypr/hyprlock".source = "${dotfilesSource}/dots/.config/hypr/hyprlock";
+      # hypr/custom/scripts handled in activation script (runtime-generated files live here)
       "hypr/hypridle.conf".source = "${dotfilesSource}/dots/.config/hypr/hypridle.conf";
       "hypr/hyprlock.conf".source = "${dotfilesSource}/dots/.config/hypr/hyprlock.conf";
+      # hyprlock: static scripts symlinked; colors.conf is matugen-generated (seeded in activation)
+      "hypr/hyprlock/check-capslock.sh".source = "${dotfilesSource}/dots/.config/hypr/hyprlock/check-capslock.sh";
+      "hypr/hyprlock/status.sh".source = "${dotfilesSource}/dots/.config/hypr/hyprlock/status.sh";
       "hypr/monitors.conf".source = "${dotfilesSource}/dots/.config/hypr/monitors.conf";
       "hypr/workspaces.conf".source = "${dotfilesSource}/dots/.config/hypr/workspaces.conf";
 
@@ -296,6 +298,26 @@ in {
           $DRY_RUN_CMD cp "$file" "$konsoleTarget/$filename"
           $DRY_RUN_CMD chmod u+w "$konsoleTarget/$filename"
       done
+
+      # Seed matugen-generated files: copy from source only if not yet present,
+      # so matugen can overwrite them at runtime (HM symlinks would be read-only)
+      seed_matugen_file() {
+        local target="$1" source="$2"
+        $DRY_RUN_CMD mkdir -p "$(dirname "$target")"
+        [ -L "$target" ] && $DRY_RUN_CMD rm "$target"
+        [ ! -f "$target" ] && [ -f "$source" ] && $DRY_RUN_CMD cp "$source" "$target"
+        [ -f "$target" ] && $DRY_RUN_CMD chmod u+w "$target"
+      }
+      seed_matugen_file "$targetPath/hypr/hyprland/colors.conf"    "$configPath/hypr/hyprland/colors.conf"
+      seed_matugen_file "$targetPath/hypr/hyprlock/colors.conf"    "$configPath/hypr/hyprlock/colors.conf"
+      seed_matugen_file "$targetPath/fuzzel/fuzzel_theme.ini"      "$configPath/fuzzel/fuzzel_theme.ini"
+
+      # 4) ~/.config/hypr/custom/scripts (runtime-generated; must be a real writable dir)
+      customScriptsTarget="$targetPath/hypr/custom/scripts"
+      if [ -L "$customScriptsTarget" ]; then
+        $DRY_RUN_CMD rm "$customScriptsTarget"
+      fi
+      $DRY_RUN_CMD mkdir -p "$customScriptsTarget"
 
       # Fix Qt icon theme configuration to use OneUI-dark/OneUI-light with Papirus fallback
       # This is still needed because qt6ct might be generating its config
