@@ -151,6 +151,8 @@ in {
       "hypr/hyprland/keybinds.conf".source = "${dotfilesSource}/dots/.config/hypr/hyprland/keybinds.conf";
       "hypr/hyprland/rules.conf".source = "${dotfilesSource}/dots/.config/hypr/hyprland/rules.conf";
       "hypr/hyprland/scripts".source = "${dotfilesSource}/dots/.config/hypr/hyprland/scripts";
+      "hypr/hyprland/shellOverrides".source = "${dotfilesSource}/dots/.config/hypr/hyprland/shellOverrides";
+      "hypr/hyprland/variables.conf".source = "${dotfilesSource}/dots/.config/hypr/hyprland/variables.conf";
 
       # Hyprland Custom Env - Reverted to direct source
       "hypr/custom/env.conf".source = "${dotfilesSource}/dots/.config/hypr/custom/env.conf";
@@ -160,6 +162,7 @@ in {
       "hypr/custom/general.conf".source = "${dotfilesSource}/dots/.config/hypr/custom/general.conf";
       "hypr/custom/keybinds.conf".source = "${dotfilesSource}/dots/.config/hypr/custom/keybinds.conf";
       "hypr/custom/rules.conf".source = "${dotfilesSource}/dots/.config/hypr/custom/rules.conf";
+      "hypr/custom/variables.conf".source = "${dotfilesSource}/dots/.config/hypr/custom/variables.conf";
       # hypr/custom/scripts handled in activation script (runtime-generated files live here)
       "hypr/hypridle.conf".source = "${dotfilesSource}/dots/.config/hypr/hypridle.conf";
       "hypr/hyprlock.conf".source = "${dotfilesSource}/dots/.config/hypr/hyprlock.conf";
