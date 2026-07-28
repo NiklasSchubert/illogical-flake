@@ -273,7 +273,9 @@ hl.env("PATH",
   ":/etc/profiles/per-user/" .. user .. "/bin" ..
   ":" .. (os.getenv("PATH") or "/usr/local/bin:/usr/bin:/bin"))
 
--- Extend XDG_DATA_DIRS with Nix profile share dirs so desktop files / icons are found
+-- Extend XDG_DATA_DIRS with Nix profile share dirs so desktop files / icons are found.
+-- The inherited value is kept: NixOS puts entries there that exist nowhere else,
+-- such as the GSettings schema dirs GTK apps need to resolve their UI font.
 hl.env("XDG_DATA_DIRS",
   home_dir .. "/.local/share" ..
   ":" .. home_dir .. "/.nix-profile/share" ..
@@ -281,7 +283,8 @@ hl.env("XDG_DATA_DIRS",
   ":/run/current-system/sw/share" ..
   ":" .. home_dir .. "/.local/share/flatpak/exports/share" ..
   ":/var/lib/flatpak/exports/share" ..
-  ":/usr/local/share:/usr/share")
+  ":/usr/local/share:/usr/share" ..
+  ":" .. (os.getenv("XDG_DATA_DIRS") or ""))
 
 -- Use qt6ct (available in Nix profile) instead of upstream "kde"
 hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
