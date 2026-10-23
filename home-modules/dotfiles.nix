@@ -168,13 +168,12 @@ in
             itemName=$(basename "$item")
             targetItem="$targetLocalShare/$itemName"
 
-            # Remove existing file/directory if it exists
-            if [ -e "$targetItem" ] || [ -L "$targetItem" ]; then
-              $DRY_RUN_CMD rm -rf "$targetItem"
+            # Merge rather than replace: apps like PWAsForFirefox install their
+            # own icons into ~/.local/share/icons, which a replace would delete.
+            if [ -L "$targetItem" ]; then
+              $DRY_RUN_CMD rm "$targetItem"
             fi
-
-            # Copy the item
-            $DRY_RUN_CMD cp -r "$item" "$targetItem"
+            $DRY_RUN_CMD cp -rT --remove-destination "$item" "$targetItem"
 
             # Make files writable
             $DRY_RUN_CMD chmod -R u+w "$targetItem"
