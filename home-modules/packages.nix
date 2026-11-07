@@ -128,6 +128,9 @@ in
       kdePackages.polkit-kde-agent-1  # Polkit authentication agent
       kdePackages.kdialog  # Dialog prompts
       kdePackages.kirigami
+      kdePackages.kcmutils  # Provides kcmshell6, which the sidebar's Details buttons run
+      kdePackages.bluez-qt  # Provides org.kde.bluezqt for kcm_bluetooth
+      kdePackages.ksvg  # Provides org.kde.ksvg for kcm_networkmanagement
 
       # Additional Qt support
       libsForQt5.qtgraphicaleffects
