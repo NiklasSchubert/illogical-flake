@@ -102,6 +102,7 @@ in
       wl-clipboard
 
       # Development libraries
+      gsettings-desktop-schemas  # Provides org.gtk.Settings.FileChooser, required by kdialog and GTK apps
       libsoup_3
       libportal-gtk4
       gobject-introspection
