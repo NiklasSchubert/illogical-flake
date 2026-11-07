@@ -86,6 +86,9 @@ in
       hyprpicker
       imagemagick
       ffmpeg
+      songrec  # Music recognition
+      pulseaudio  # Provides pactl and parec for audio recording
+      cloudflare-warp  # Provides warp-cli for the WARP toggle
       gnome-settings-daemon  # Provides gsettings
       libnotify  # Provides notify-send
       easyeffects
