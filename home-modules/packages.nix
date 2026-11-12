@@ -112,6 +112,7 @@ in
       # Themes and icons
       adw-gtk3
       customPkgs.illogical-impulse-oneui4-icons
+      customPkgs.breeze-plus  # Icon theme the dots' kde-material-you-colors writes into kdeglobals
       papirus-icon-theme  # Primary icon theme
       adwaita-icon-theme  # GNOME fallback icons
       hicolor-icon-theme  # Base icon theme (required by most themes)
