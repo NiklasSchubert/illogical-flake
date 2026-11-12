@@ -10,12 +10,11 @@ in
   config = lib.mkIf cfg.enable {
     # Environment variables for Illogical Impulse
     home.sessionVariables = {
-      QT_QPA_PLATFORMTHEME = "qt6ct";  # Use qt6ct for Qt6 theming
+      QT_QPA_PLATFORMTHEME = "kde";  # Same as the dots: Qt reads its theme from kdeglobals
       QT_STYLE_OVERRIDE = "";
       ILLOGICAL_IMPULSE_DOTFILES_SOURCE = "${config.home.homeDirectory}/.config";
     };
 
-    # Install qt6ct for Qt theming
-    home.packages = [ pkgs.qt6Packages.qt6ct ];
+    home.packages = [ pkgs.kdePackages.plasma-integration ];
   };
 }

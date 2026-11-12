@@ -162,9 +162,6 @@ hl.env("XDG_DATA_DIRS",
   ":/var/lib/flatpak/exports/share" ..
   ":/usr/local/share:/usr/share" ..
   ":" .. (os.getenv("XDG_DATA_DIRS") or ""))
-
--- Use qt6ct (available in Nix profile) instead of upstream "kde"
-hl.env("QT_QPA_PLATFORMTHEME", "qt6ct")
 LUAEOF
             echo "Generated hyprland custom/env.lua with NixOS paths"
           fi
@@ -191,16 +188,6 @@ hl.plugin("${plugin}/lib/lib${plugin.pname}.so")
       done
 
       echo "Copied Illogical Impulse configuration files to ~/.config"
-
-      # Fix Qt icon theme configuration to use OneUI-dark/OneUI-light with Papirus fallback
-      for qt_conf in "$targetPath/qt5ct/qt5ct.conf" "$targetPath/qt6ct/qt6ct.conf"; do
-        if [ -f "$qt_conf" ]; then
-          # Replace OneUI with OneUI-dark, OneUI-light stays as-is
-          $DRY_RUN_CMD sed -i 's/^icon_theme=OneUI$/icon_theme=OneUI-dark/' "$qt_conf"
-          $DRY_RUN_CMD sed -i 's/^icon_theme=OneUI-light$/icon_theme=OneUI-light/' "$qt_conf"
-          echo "Updated Qt icon theme in $(basename $(dirname $qt_conf))"
-        fi
-      done
 
       # Fix fontconfig conf.d if it's a file instead of directory
       if [ -f "$targetPath/fontconfig/conf.d" ]; then
